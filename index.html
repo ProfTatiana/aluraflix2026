@@ -1,15 +1,406 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Minha Primeira Página</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <title>Guiminamflix</title>
+    
+    <style>
+        /* --- ESTILOS GERAIS & VARIÁVEIS --- */
+        :root {
+            --bg-color: #0b0813;
+            --header-bg: rgba(11, 8, 19, 0.95);
+            --primary-color: #ff0055;
+            --secondary-color: #00f3ff;
+            --text-color: #ffffff;
+            --text-muted: #a0a0c0;
+            --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --neon-glow: 0 0 15px rgba(255, 0, 85, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Chakra Petch", sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 0, 85, 0.2);
+            padding: 20px 5%;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+            letter-spacing: 3px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header::after {
+            content: "• ONLINE";
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px var(--secondary-color);
+            letter-spacing: 1px;
+        }
+
+        /* --- SEÇÃO PRINCIPAL (CHAMADA) --- */
+        .chamada {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 60px 5%;
+            min-height: 70vh;
+            background: radial-gradient(circle at 80% 20%, rgba(255, 0, 85, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .chamada-texto {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .chamada-texto h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #fff 30%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Badge/Tag Customizada */
+        .chamada-texto p {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), #b0003a);
+            color: #fff;
+            padding: 6px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: var(--neon-glow);
+            margin-top: 10px;
+        }
+
+        /* Container do Vídeo com efeito Neon */
+        .video-container {
+            flex: 1.2;
+            width: 100%;
+            max-width: 650px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow), 0 0 30px rgba(0, 243, 255, 0.2);
+            border: 3px solid rgba(0, 243, 255, 0.3);
+            transition: border-color 0.4s ease;
+        }
+
+        .video-container:hover {
+            border-color: var(--primary-color);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* --- SEÇÃO CATEGORIAS & CARDS --- */
+        .categoria {
+            padding: 40px 5% 80px 5%;
+        }
+
+        .categoria h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            position: relative;
+            padding-left: 15px;
+            color: #fff;
+        }
+
+        /* Detalhe estético ao lado do título */
+        .categoria h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 15%;
+            height: 70%;
+            width: 5px;
+            background: var(--primary-color);
+            box-shadow: var(--neon-glow);
+            border-radius: 2px;
+        }
+
+        /* Grid de Vídeos Scrollável */
+        .categoria-videos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* Card de Vídeo */
+        .video-card {
+            background: #151124;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: var(--secondary-color);
+            box-shadow: 0 10px 20px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Imagem da Thumb */
+        .video-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.3s ease;
+        }
+
+        .video-card:hover img {
+            filter: brightness(1.1);
+        }
+
+        /* Detalhes internos do card */
+        .card-details {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .card-tag {
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Indicador de "Tocando Agora" */
+        .active-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+
+        .video-card.active .active-indicator {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .video-card.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 968px) {
+            .chamada {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 5%;
+                gap: 30px;
+            }
+
+            .chamada-texto {
+                max-width: 100%;
+            }
+
+            .chamada-texto h1 {
+                font-size: 2.5rem;
+            }
+
+            .video-container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                font-size: 1.5rem;
+                padding: 15px 5%;
+            }
+
+            .chamada-texto h1 {
+                font-size: 2rem;
+            }
+
+            .categoria-videos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body> 
-    <h1>Bem-vindo ao meu site</h1>
 
-<p>Este é um parágrafo sobre <strong>aprendizado</strong>.</p>
+<body>
+    <!-- Cabeçalho moderno -->
+    <header>GUIMINAMFLIX</header>
 
-<a href="https://google.com">Clique aqui para pesquisar</a>
+    <!-- Seção de Destaque com Player Interativo -->
+    <section class="chamada">
+        <div class="chamada-texto">
+            <!-- Títulos e tags serão atualizados dinamicamente pelo JavaScript -->
+            <h1 id="featured-title">ATRAVÉS DO ARANHAVERSO</h1>
+            <p id="featured-tag">#homem-aranha</p>
+        </div>
+
+        <div class="video-container">
+            <iframe id="main-player" src="https://www.youtube.com/embed/gt_fAE1Eg2Q?si=EEv-tsY_b1B2OwKE"
+                title="YouTube video player" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Galeria de Filmes e Séries -->
+    <section class="categoria">
+        <h2>Filmes e séries sugeridos</h2>
+        
+        <div class="categoria-videos">
+            <!-- Card 1 (Inicia Ativo correspondendo ao Trailer Principal) -->
+            <div class="video-card active" onclick="changeVideo('gt_fAE1Eg2Q?si=EEv-tsY_b1B2OwKE', 'ATRAVÉS DO ARANHAVERSO', '#homem-aranha', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/gt_fAE1Eg2Q/maxresdefault.jpg" alt="Através do Aranhaverso">
+                <div class="card-details">
+                    <div class="card-title">Através do Aranhaverso</div>
+                    <div class="card-tag">#homem-aranha</div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="video-card" onclick="changeVideo('cs15QqG6Gjc', 'Loki: Temporada 2', '#marvel', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/cs15QqG6Gjc/maxresdefault.jpg" alt="Loki">
+                <div class="card-details">
+                    <div class="card-title">Loki: Temporada 2</div>
+                    <div class="card-tag">#marvel</div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="video-card" onclick="changeVideo('nCmIwcycUJ8', 'Duna: Parte Dois', '#sci-fi', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/nCmIwcycUJ8/maxresdefault.jpg" alt="Duna">
+                <div class="card-details">
+                    <div class="card-title">Duna: Parte Dois</div>
+                    <div class="card-tag">#sci-fi</div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="video-card" onclick="changeVideo('FvRmEapoHRc', 'The Batman', '#dc-comics', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/FvRmEapoHRc/maxresdefault.jpg" alt="The Batman">
+                <div class="card-details">
+                    <div class="card-title">The Batman</div>
+                    <div class="card-tag">#dc-comics</div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="video-card" onclick="changeVideo('Ipkw_hWW-Hw', 'Stranger Things 4', '#series', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/Ipkw_hWW-Hw/maxresdefault.jpg" alt="Stranger Things">
+                <div class="card-details">
+                    <div class="card-title">Stranger Things 4</div>
+                    <div class="card-tag">#series</div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="video-card" onclick="changeVideo('d4DzMNGoyis', 'Guardiões da Galáxia 3', '#aventura', this)">
+                <span class="active-indicator">TOCANDO</span>
+                <img src="https://img.youtube.com/vi/d4DzMNGoyis/maxresdefault.jpg" alt="Guardiões da Galáxia">
+                <div class="card-details">
+                    <div class="card-title">Guardiões da Galáxia Vol. 3</div>
+                    <div class="card-tag">#aventura</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Script de controle para alternar os trailers em tempo real -->
+    <script>
+        function changeVideo(youtubeId, title, tag, cardElement) {
+            // Atualiza a URL do Player com autoplay ativado
+            const player = document.getElementById('main-player');
+            // Verificação se o ID já vem com parâmetros do YouTube ou não
+            const videoSrc = youtubeId.includes('?') 
+                ? `https://www.youtube.com/embed/${youtubeId}&autoplay=1` 
+                : `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+            
+            player.src = videoSrc;
+
+            // Atualiza o texto do destaque principal
+            document.getElementById('featured-title').innerText = title.toUpperCase();
+            document.getElementById('featured-tag').innerText = tag;
+
+            // Altera as classes 'active' nos cards da lista
+            const cards = document.querySelectorAll('.video-card');
+            cards.forEach(card => card.classList.remove('active'));
+            cardElement.classList.add('active');
+
+            // Rola a tela de volta suavemente para o topo do player
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
-</html>
 
+</html>
